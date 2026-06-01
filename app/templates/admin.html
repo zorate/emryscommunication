@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}Control Console - Emrys Communications{% endblock %}
+
+{% block content %}
+<div class="admin-workspace section-container">
+    {% if login_required %}
+    <div class="glass-card auth-container">
+        <h3>Console Authentication Needed</h3>
+        <p>Input secure administrative phrase parameters to unlock central databanks.</p>
+        <form id="admin-login-form">
+            <div class="form-group">
+                <label>Admin Security Encryption Phrase</label>
+                <input type="password" name="password" required placeholder="••••••••••••••">
+            </div>
+            <button type="submit" class="submit-btn glow-btn">Decrypt Access Key</button>
+        </form>
+    </div>
+    {% else %}
+    <div class="dashboard-header">
+        <h2>CENTRAL DECRYPTED SYSTEM CORE</h2>
+        <p>Operational Monitoring State: Online</p>
+    </div>
+
+    <div class="dashboard-grid">
+        <div class="glass-card panel">
+            <h3>Broadcast New Diagnostic Media</h3>
+            <form id="media-upload-form" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label>Target File Artifact (Image/Video)</label>
+                    <input type="file" name="media_file" accept="image/*,video/*" required class="file-custom-input">
+                </div>
+                <div class="form-group">
+                    <label>Context Blueprint Description Narrative</label>
+                    <textarea name="description" rows="4" required placeholder="Provide clear technical summary..."></textarea>
+                </div>
+                <button type="submit" class="submit-btn glow-btn">Deploy GridFS Cluster Element</button>
+            </form>
+        </div>
+
+        <div class="glass-card panel wide-panel">
+            <h3>Academy Pipeline Applications</h3>
+            <div class="table-responsive">
+                <table class="dashboard-table">
+                    <thead>
+                        <tr>
+                            <th>Applicant Space Profile</th>
+                            <th>Regional Matrix</th>
+                            <th>Kin/Guardian Contact Links</th>
+                            <th>Status Matrix</th>
+                            <th>Operational Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for app in applicants %}
+                        <tr id="row-{{ app._id }}">
+                            <td>
+                                <strong>{{ app.fullname }}</strong><br>
+                                <span class="sub-meta">Age: {{ app.age }} | DoB: {{ app.dob }}</span><br>
+                                <span class="badge-exp {{ 'exp-true' if app.has_experience else 'exp-false' }}">
+                                    {{ 'Experienced' if app.has_experience else 'Beginner Baseline' }}
+                                </span>
+                            </td>
+                            <td>{{ app.state_of_origin }} / {{ app.lga }}<br><span class="sub-meta">{{ app.phone }}</span></td>
+                            <td>
+                                <span class="sub-meta">M: {{ app.mother_name }}</span><br>
+                                <span class="sub-meta">F: {{ app.father_name }}</span><br>
+                                <strong>G-Line: {{ app.guardian_phone if app.guardian_option == 'other' else '(Linked to parents)' }}</strong>
+                            </td>
+                            <td>
+                                <span class="status-badge {{ app.status|lower }}">{{ app.status }}</span>
+                            </td>
+                            <td>
+                                <div class="action-btn-cluster">
+                                    <button onclick="processApplication('{{ app._id }}', 'approve')" class="action-btn approve-btn">✓</button>
+                                    <button onclick="processApplication('{{ app._id }}', 'reject')" class="action-btn reject-btn">✗</button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="empty-table">No prospective applications found on database servers.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

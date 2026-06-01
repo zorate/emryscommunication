@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Emrys Communications{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="glass-nav">
+        <div class="nav-container">
+            <a href="{{ url_for('main.index') }}" class="logo-brand">EMRYS<span>.</span></a>
+            <div class="nav-links">
+                <a href="{{ url_for('main.index') }}#home">Home</a>
+                <a href="{{ url_for('main.index') }}#services">Services</a>
+                <a href="{{ url_for('main.index') }}#gallery">Showcase</a>
+                <a href="{{ url_for('main.index') }}#register" class="cta-nav">Join Academy</a>
+                {% if session.is_admin %}
+                    <a href="{{ url_for('main.admin_dashboard') }}" class="admin-badge">Dashboard</a>
+                    <a href="{{ url_for('main.admin_logout') }}" class="logout-btn">Exit</a>
+                {% else %}
+                    <a href="{{ url_for('main.admin_dashboard') }}" class="admin-icon-link">⚙</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <main class="content-wrapper">
+        {% block content %}{% endblock %}
+    </main>
+
+    <div id="toast-notification" class="toast hidden"></div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
