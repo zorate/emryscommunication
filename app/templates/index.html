@@ -1,159 +1,216 @@
 
 {% extends 'base.html' %}
 
+{% block title %}Emry Global Tech Realm | Phones · Parts · Accessories · Repairs{% endblock %}
+
 {% block content %}
+
+<!-- ========== HERO SECTION ========== -->
 <section id="home" class="hero-section">
-    <div class="hero-overlay"></div>
+    <div class="hero-bg-overlay"></div>
     <div class="hero-content">
-        <h1 class="glow-text">EMRYS COMMUNICATIONS</h1>
-        <p class="subtitle-gradient">Futuristic Engineering. Masterful Repairs.</p>
+        <!-- Logo-inspired text mark -->
+        <div class="hero-logo-mark">
+            <div class="logo-phone-icon">
+                <div class="phone-frame">
+                    <span class="big-e">E</span>
+                    <span class="wrench-icon">🔧</span>
+                </div>
+            </div>
+        </div>
+        <h1 class="hero-title">
+            <span class="title-emry">EMRY</span><span class="title-s">S</span>
+        </h1>
+        <div class="hero-subtitle-block">
+            <div class="line-decor"></div>
+            <span class="hero-subtitle">GLOBAL TECH REALM</span>
+            <div class="line-decor"></div>
+        </div>
+        <div class="hero-tagline-badge">WE CAN FIX IT</div>
         <p class="hero-description">
-            Specialized diagnosis and component-level repairs for all smart structures. 
-            From **Apple iOS & Advanced Android configurations** down to micro-soldering **ICs, 
-            display glass structures, power circuits, and high-fidelity sound transmitters**.
+            Your trusted destination for all smartphone needs — deals, parts, accessories, and expert repairs.
         </p>
+        <div class="hero-pills">
+            <span class="pill">📱 All Phones</span>
+            <span class="pill">🔩 Phone Parts</span>
+            <span class="pill">🎧 Accessories</span>
+            <span class="pill">🔧 Repairs</span>
+        </div>
         <div class="hero-buttons">
-            <a href="#register" class="btn-primary glow-btn">Apply for Apprenticeship</a>
-            <a href="#services" class="btn-secondary">Explore Labs</a>
+            <a href="#appointment" class="btn-primary glow-btn" id="hero-book-btn">📅 Book Appointment</a>
+            <a href="#shop" class="btn-secondary" id="hero-shop-btn">🛒 Explore Shop</a>
         </div>
+    </div>
+    <div class="hero-scroll-hint">
+        <div class="scroll-arrow"></div>
     </div>
 </section>
 
+<!-- ========== SERVICES SECTION ========== -->
 <section id="services" class="section-container">
-    <h2 class="section-title">Core Competencies</h2>
-    <div class="glass-grid">
-        <div class="glass-card/card-body">
-            <div class="card-icon">⚡</div>
-            <h3>Micro-Soldering & ICs</h3>
-            <p>Surgical-level motherboard repair, trace restorations, and Integrated Circuit swaps for structural power line diagnostics.</p>
+    <div class="section-header">
+        <h2 class="section-title">What We Offer</h2>
+        <p class="section-subtitle">Quality · Trust · Reliability</p>
+    </div>
+    <div class="services-grid">
+        <div class="service-card" id="service-phones">
+            <div class="service-icon-wrap">
+                <span class="service-icon">📱</span>
+            </div>
+            <h3>All Kinds of Phones</h3>
+            <p>Dealers on all makes and models — from flagship iPhones to Android powerhouses. Brand new and fairly used options available.</p>
         </div>
-        <div class="glass-card/card-body">
-            <div class="card-icon">📱</div>
-            <h3>Display Assemblies</h3>
-            <p>Flawless optical bond laminations and complete structural glass replacement arrays for high-refresh premium screens.</p>
+        <div class="service-card" id="service-parts">
+            <div class="service-icon-wrap">
+                <span class="service-icon">⚙️</span>
+            </div>
+            <h3>Phone Parts</h3>
+            <p>Genuine replacement parts including screens, batteries, charging ports, cameras, speakers, and internal components.</p>
         </div>
-        <div class="glass-card/card-body">
-            <div class="card-icon">🎙️</div>
-            <h3>Acoustic Components</h3>
-            <p>Surgical replacement loops for audio IC transceivers, pristine mouthpieces, charging rails, and internal elements.</p>
+        <div class="service-card" id="service-accessories">
+            <div class="service-icon-wrap">
+                <span class="service-icon">🎧</span>
+            </div>
+            <h3>Accessories</h3>
+            <p>Cases, screen protectors, chargers, cables, earphones, power banks, and all mobile accessories you need.</p>
         </div>
+        <div class="service-card" id="service-repairs">
+            <div class="service-icon-wrap">
+                <span class="service-icon">🔧</span>
+            </div>
+            <h3>Repair Services</h3>
+            <p>Professional diagnosis and repair services — screen replacements, battery swaps, water damage recovery, software fixes and more.</p>
+        </div>
+    </div>
+    <div class="trust-banner">
+        <span>— QUALITY</span>
+        <span class="trust-dot">●</span>
+        <span>TRUST</span>
+        <span class="trust-dot">●</span>
+        <span>RELIABILITY —</span>
     </div>
 </section>
 
-<section id="gallery" class="section-container">
-    <h2 class="section-title">Laboratory Stream</h2>
-    <p class="section-subtitle">Real-time diagnostic records straight from our hardware technicians.</p>
-    <div class="media-grid">
+<!-- ========== GALLERY / BUSINESS UPLOADS SECTION ========== -->
+<section id="gallery" class="section-container dark-section">
+    <div class="section-header">
+        <h2 class="section-title">Business Feed</h2>
+        <p class="section-subtitle">Latest updates, showcases and news from our workshop</p>
+    </div>
+    <div class="media-grid" id="gallery-grid">
         {% for item in gallery %}
-        <div class="media-card glass-card">
+        <div class="media-card" id="gal-{{ loop.index }}">
             <div class="media-wrapper">
                 {% if 'video' in item.content_type %}
                 <video src="{{ url_for('main.serve_media', file_id=item.file_id) }}" controls preload="metadata"></video>
                 {% else %}
-                <img src="{{ url_for('main.serve_media', file_id=item.file_id) }}" alt="Emrys Workshop Feed" loading="lazy">
+                <img src="{{ url_for('main.serve_media', file_id=item.file_id) }}" alt="Emry Global Tech Realm" loading="lazy">
                 {% endif %}
             </div>
-            <div class="media-overlay">
+            {% if item.description %}
+            <div class="media-caption">
                 <p>{{ item.description }}</p>
             </div>
+            {% endif %}
         </div>
         {% else %}
-        <div class="empty-gallery glass-card">
-            <p>No operational media broadcast documents live yet.</p>
+        <div class="empty-state" id="gallery-empty">
+            <div class="empty-icon">📸</div>
+            <p>No posts yet. Check back soon for updates!</p>
         </div>
         {% endfor %}
     </div>
 </section>
 
-<section id="register" class="section-container form-section">
-    <div class="glass-card form-container">
-        <h2 class="form-title">Hardware Academy Enrollment</h2>
-        <p class="form-instructions">Submit your profile structural components to apply for specialized training.</p>
-        
-        <form id="apprentice-form" action="{{ url_for('main.register_apprentice') }}" method="POST">
-            <div class="form-segment">
-                <h4>1. Structural Identity</h4>
-                <div class="form-group">
-                    <label>Full Legal Name</label>
-                    <input type="text" name="fullname" required placeholder="John Doe">
+<!-- ========== SHOP / PRODUCTS SECTION ========== -->
+<section id="shop" class="section-container">
+    <div class="section-header">
+        <h2 class="section-title">Our Shop</h2>
+        <p class="section-subtitle">Browse our latest products and deals</p>
+    </div>
+    <div class="shop-filters" id="shop-filters">
+        <button class="filter-btn active" data-filter="all" id="filter-all">All</button>
+        <button class="filter-btn" data-filter="phones" id="filter-phones">📱 Phones</button>
+        <button class="filter-btn" data-filter="parts" id="filter-parts">⚙️ Parts</button>
+        <button class="filter-btn" data-filter="accessories" id="filter-accessories">🎧 Accessories</button>
+    </div>
+    <div class="products-grid" id="products-grid">
+        {% for product in products %}
+        <div class="product-card" data-category="{{ product.category }}" id="prod-{{ loop.index }}">
+            <div class="product-image-wrap">
+                {% if product.image_id %}
+                <img src="{{ url_for('main.serve_media', file_id=product.image_id) }}" alt="{{ product.name }}" loading="lazy">
+                {% else %}
+                <div class="product-placeholder">
+                    <span>{% if product.category == 'phones' %}📱{% elif product.category == 'parts' %}⚙️{% else %}🎧{% endif %}</span>
                 </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Age</label>
-                        <input type="number" name="age" required min="14" max="99" placeholder="18">
-                    </div>
-                    <div class="form-group">
-                        <label>Date of Birth</label>
-                        <input type="date" name="dob" required>
-                    </div>
+                {% endif %}
+                {% if product.badge %}
+                <span class="product-badge">{{ product.badge }}</span>
+                {% endif %}
+            </div>
+            <div class="product-info">
+                <span class="product-category">{{ product.category | capitalize }}</span>
+                <h3 class="product-name">{{ product.name }}</h3>
+                <p class="product-desc">{{ product.description }}</p>
+                <div class="product-footer">
+                    <span class="product-price">₦{{ "{:,.0f}".format(product.price) }}</span>
+                    <a href="#appointment" class="btn-order" onclick="prefillAppointment('{{ product.name }}')">Enquire</a>
                 </div>
             </div>
+        </div>
+        {% else %}
+        <div class="empty-state" id="shop-empty">
+            <div class="empty-icon">🛒</div>
+            <p>Products coming soon! Book an appointment to enquire about available stock.</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
 
-            <div class="form-segment">
-                <h4>2. Geo-Location References</h4>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>State of Origin</label>
-                        <input type="text" name="state_of_origin" required placeholder="Enugu">
-                    </div>
-                    <div class="form-group">
-                        <label>L.G.A.</label>
-                        <input type="text" name="lga" required placeholder="Nsukka">
-                    </div>
+<!-- ========== BOOK APPOINTMENT SECTION ========== -->
+<section id="appointment" class="section-container dark-section">
+    <div class="section-header">
+        <h2 class="section-title">Book an Appointment</h2>
+        <p class="section-subtitle">Schedule a visit or enquire about our services</p>
+    </div>
+    <div class="form-card" id="appt-form-card">
+        <form id="appointment-form" action="{{ url_for('main.book_appointment') }}" method="POST">
+            <div class="form-group">
+                <label for="appt-name">Full Name</label>
+                <input type="text" id="appt-name" name="fullname" required placeholder="e.g. John Doe">
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="appt-phone">Phone Number</label>
+                    <input type="tel" id="appt-phone" name="phone" required placeholder="+234...">
                 </div>
                 <div class="form-group">
-                    <label>Personal Mobile Line (Optional)</label>
-                    <input type="tel" name="phone" placeholder="+234...">
+                    <label for="appt-date">Preferred Date</label>
+                    <input type="date" id="appt-date" name="appt_date" required>
                 </div>
             </div>
-
-            <div class="form-segment">
-                <h4>3. Family & Emergency Contacts</h4>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Mother's Full Name</label>
-                        <input type="text" name="mother_name" required placeholder="Mary Doe">
-                    </div>
-                    <div class="form-group">
-                        <label>Father's Full Name</label>
-                        <input type="text" name="father_name" required placeholder="Robert Doe">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>Primary Guardian Emergency Line Node Configuration</label>
-                    <div class="toggle-container">
-                        <label class="radio-label">
-                            <input type="radio" name="guardian_option" value="mother" checked onclick="toggleGuardianPhone(false)"> Use Mother's
-                        </label>
-                        <label class="radio-label">
-                            <input type="radio" name="guardian_option" value="father" onclick="toggleGuardianPhone(false)"> Use Father's
-                        </label>
-                        <label class="radio-label">
-                            <input type="radio" name="guardian_option" value="other" onclick="toggleGuardianPhone(true)"> Custom Guardian Line
-                        </label>
-                    </div>
-                    <input type="tel" id="guardian_phone" name="guardian_phone" placeholder="Enter custom emergency number" class="hidden-field" style="display:none; margin-top:10px;">
-                </div>
+            <div class="form-group">
+                <label for="appt-service">Service Needed</label>
+                <select id="appt-service" name="service" required>
+                    <option value="">-- Select a Service --</option>
+                    <option value="Phone Purchase">📱 Phone Purchase / Enquiry</option>
+                    <option value="Phone Parts">⚙️ Phone Parts</option>
+                    <option value="Accessories">🎧 Accessories</option>
+                    <option value="Screen Repair">🔧 Screen Repair</option>
+                    <option value="Battery Replacement">🔋 Battery Replacement</option>
+                    <option value="Software Fix">💻 Software Fix</option>
+                    <option value="Water Damage">💧 Water Damage Recovery</option>
+                    <option value="Other Repair">🛠️ Other Repair</option>
+                </select>
             </div>
-
-            <div class="form-segment">
-                <h4>4. Diagnostic Experience Check</h4>
-                <div class="form-group">
-                    <label>Do you possess historical background exposure within the phone repair space?</label>
-                    <div class="toggle-container style-row">
-                        <label class="radio-label text-caps">
-                            <input type="radio" name="has_experience" value="yes"> Core Yes
-                        </label>
-                        <label class="radio-label text-caps">
-                            <input type="radio" name="has_experience" value="no" checked> Absolute No
-                        </label>
-                    </div>
-                </div>
+            <div class="form-group">
+                <label for="appt-message">Additional Notes (Optional)</label>
+                <textarea id="appt-message" name="message" rows="3" placeholder="Describe your device issue or what you need..."></textarea>
             </div>
-
-            <button type="submit" class="submit-btn glow-btn">Transmit Academy Profile</button>
+            <button type="submit" class="submit-btn glow-btn" id="appt-submit-btn">📅 Submit Booking</button>
         </form>
     </div>
 </section>
+
 {% endblock %}

@@ -1,54 +1,209 @@
 {% extends 'base.html' %}
 
-{% block title %}Control Console - Emrys Communications{% endblock %}
+{% block title %}Admin Dashboard — Emry Global Tech Realm{% endblock %}
 
 {% block content %}
-<div class="admin-workspace section-container">
+<div class="admin-workspace section-container" style="max-width:960px; padding-top:90px;">
+
     {% if login_required %}
-    <div class="glass-card auth-container">
-        <h3>Console Authentication Needed</h3>
-        <p>Input secure administrative phrase parameters to unlock central databanks.</p>
+    <!-- ===== Login Gate ===== -->
+    <div class="form-card auth-container" style="max-width:400px; margin:0 auto; margin-top:40px;">
+        <div class="section-header" style="margin-bottom:24px;">
+            <h2 class="section-title" style="font-size:1.3rem;">Admin Access</h2>
+            <p class="section-subtitle">Enter your password to access the dashboard.</p>
+        </div>
         <form id="admin-login-form">
             <div class="form-group">
-                <label>Admin Security Encryption Phrase</label>
-                <input type="password" name="password" required placeholder="••••••••••••••">
+                <label for="admin-pass">Password</label>
+                <input type="password" id="admin-pass" name="password" required placeholder="••••••••••">
             </div>
-            <button type="submit" class="submit-btn glow-btn">Decrypt Access Key</button>
+            <button type="submit" class="submit-btn glow-btn">🔓 Login</button>
         </form>
     </div>
+
     {% else %}
-    <div class="dashboard-header">
-        <h2>CENTRAL DECRYPTED SYSTEM CORE</h2>
-        <p>Operational Monitoring State: Online</p>
+    <!-- ===== Dashboard Header ===== -->
+    <div style="text-align:center; margin-bottom:36px;">
+        <h2 class="section-title" style="font-size:1.5rem;">Admin Dashboard</h2>
+        <p style="color:var(--text-muted); font-size:0.85rem; margin-top:14px;">Emry Global Tech Realm — Control Panel</p>
     </div>
 
-    <div class="dashboard-grid">
-        <div class="glass-card panel">
-            <h3>Broadcast New Diagnostic Media</h3>
-            <form id="media-upload-form" enctype="multipart/form-data">
-                <div class="form-group">
-                    <label>Target File Artifact (Image/Video)</label>
-                    <input type="file" name="media_file" accept="image/*,video/*" required class="file-custom-input">
-                </div>
-                <div class="form-group">
-                    <label>Context Blueprint Description Narrative</label>
-                    <textarea name="description" rows="4" required placeholder="Provide clear technical summary..."></textarea>
-                </div>
-                <button type="submit" class="submit-btn glow-btn">Deploy GridFS Cluster Element</button>
-            </form>
-        </div>
+    <!-- ===== TABS ===== -->
+    <div class="admin-tabs" id="admin-tabs">
+        <button class="tab-btn active" data-tab="tab-appointments" id="tabBtn-appointments">📅 Appointments</button>
+        <button class="tab-btn" data-tab="tab-gallery" id="tabBtn-gallery">📸 Gallery</button>
+        <button class="tab-btn" data-tab="tab-shop" id="tabBtn-shop">🛒 Shop</button>
+        <button class="tab-btn" data-tab="tab-applicants" id="tabBtn-applicants">👤 Applicants</button>
+    </div>
 
-        <div class="glass-card panel wide-panel">
-            <h3>Academy Pipeline Applications</h3>
+    <!-- ===== TAB: APPOINTMENTS ===== -->
+    <div class="tab-panel active" id="tab-appointments">
+        <div class="form-card" style="margin-bottom:24px;">
+            <h3 style="font-family:'Orbitron',sans-serif; font-size:1rem; color:var(--blue-light); margin-bottom:20px;">📅 Appointment Bookings</h3>
             <div class="table-responsive">
                 <table class="dashboard-table">
                     <thead>
                         <tr>
-                            <th>Applicant Space Profile</th>
-                            <th>Regional Matrix</th>
-                            <th>Kin/Guardian Contact Links</th>
-                            <th>Status Matrix</th>
-                            <th>Operational Actions</th>
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Service</th>
+                            <th>Date</th>
+                            <th>Message</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for appt in appointments %}
+                        <tr id="appt-row-{{ appt._id }}">
+                            <td><strong>{{ appt.fullname }}</strong></td>
+                            <td><span class="sub-meta">{{ appt.phone }}</span></td>
+                            <td>{{ appt.service }}</td>
+                            <td><span class="sub-meta">{{ appt.appt_date }}</span></td>
+                            <td><span class="sub-meta">{{ appt.message or '—' }}</span></td>
+                            <td><span class="status-badge {{ appt.status|lower }}">{{ appt.status }}</span></td>
+                            <td>
+                                <div class="action-btn-cluster">
+                                    <button onclick="confirmAppointment('{{ appt._id }}', 'confirm')" class="action-btn approve-btn">✓</button>
+                                    <button onclick="confirmAppointment('{{ appt._id }}', 'cancel')" class="action-btn reject-btn">✗</button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="7" class="empty-table">No appointments yet.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== TAB: GALLERY ===== -->
+    <div class="tab-panel" id="tab-gallery" style="display:none;">
+        <div class="form-card" style="margin-bottom:24px;">
+            <h3 style="font-family:'Orbitron',sans-serif; font-size:1rem; color:var(--blue-light); margin-bottom:20px;">📸 Upload New Post</h3>
+            <form id="media-upload-form" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label>Select Image or Video</label>
+                    <input type="file" name="media_file" accept="image/*,video/*" required>
+                </div>
+                <div class="form-group">
+                    <label>Caption / Description</label>
+                    <textarea name="description" rows="3" placeholder="Write a caption for this post..."></textarea>
+                </div>
+                <button type="submit" class="submit-btn glow-btn" style="padding:12px;">📤 Upload Post</button>
+            </form>
+        </div>
+
+        <div class="form-card">
+            <h3 style="font-family:'Orbitron',sans-serif; font-size:1rem; color:var(--blue-light); margin-bottom:20px;">Current Gallery Posts ({{ gallery|length }})</h3>
+            <div class="admin-media-grid">
+                {% for item in gallery %}
+                <div class="admin-media-item" id="gal-item-{{ item._id }}">
+                    {% if 'video' in item.content_type %}
+                    <video src="{{ url_for('main.serve_media', file_id=item.file_id) }}" controls style="width:100%;border-radius:8px;"></video>
+                    {% else %}
+                    <img src="{{ url_for('main.serve_media', file_id=item.file_id) }}" alt="Gallery" style="width:100%;border-radius:8px;object-fit:cover;aspect-ratio:16/9;">
+                    {% endif %}
+                    <p style="font-size:0.75rem; color:var(--text-muted); margin:6px 0;">{{ item.description or '(No caption)' }}</p>
+                    <button onclick="deleteMedia('{{ item._id }}')" class="action-btn reject-btn" style="width:100%;margin-top:4px;">🗑 Delete</button>
+                </div>
+                {% else %}
+                <p style="color:var(--text-dim); font-size:0.85rem;">No gallery posts yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== TAB: SHOP ===== -->
+    <div class="tab-panel" id="tab-shop" style="display:none;">
+        <div class="form-card" style="margin-bottom:24px;">
+            <h3 style="font-family:'Orbitron',sans-serif; font-size:1rem; color:var(--blue-light); margin-bottom:20px;">🛒 Add New Product</h3>
+            <form id="product-upload-form" enctype="multipart/form-data">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Product Name</label>
+                        <input type="text" name="name" required placeholder="e.g. iPhone 14 Pro">
+                    </div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select name="category" required>
+                            <option value="phones">📱 Phones</option>
+                            <option value="parts">⚙️ Parts</option>
+                            <option value="accessories">🎧 Accessories</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Price (₦)</label>
+                        <input type="number" name="price" required placeholder="0" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Badge (optional)</label>
+                        <input type="text" name="badge" placeholder="e.g. NEW, HOT, SALE">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea name="description" rows="2" placeholder="Brief product description..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Product Image (optional)</label>
+                    <input type="file" name="image_file" accept="image/*">
+                </div>
+                <button type="submit" class="submit-btn glow-btn" style="padding:12px;">➕ Add Product</button>
+            </form>
+        </div>
+
+        <div class="form-card">
+            <h3 style="font-family:'Orbitron',sans-serif; font-size:1rem; color:var(--blue-light); margin-bottom:20px;">Current Products ({{ products|length }})</h3>
+            <div class="table-responsive">
+                <table class="dashboard-table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for prod in products %}
+                        <tr id="prod-row-{{ prod._id }}">
+                            <td>
+                                <strong>{{ prod.name }}</strong><br>
+                                <span class="sub-meta">{{ prod.description[:60] if prod.description else '' }}...</span>
+                            </td>
+                            <td>{{ prod.category | capitalize }}</td>
+                            <td class="product-price">₦{{ "{:,.0f}".format(prod.price) }}</td>
+                            <td>
+                                <button onclick="deleteProduct('{{ prod._id }}')" class="action-btn reject-btn">🗑 Delete</button>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="4" class="empty-table">No products yet. Add your first product above.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== TAB: APPLICANTS ===== -->
+    <div class="tab-panel" id="tab-applicants" style="display:none;">
+        <div class="form-card">
+            <h3 style="font-family:'Orbitron',sans-serif; font-size:1rem; color:var(--blue-light); margin-bottom:20px;">👤 Academy Applications</h3>
+            <div class="table-responsive">
+                <table class="dashboard-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Location</th>
+                            <th>Phone</th>
+                            <th>Experience</th>
+                            <th>Status</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -56,20 +211,12 @@
                         <tr id="row-{{ app._id }}">
                             <td>
                                 <strong>{{ app.fullname }}</strong><br>
-                                <span class="sub-meta">Age: {{ app.age }} | DoB: {{ app.dob }}</span><br>
-                                <span class="badge-exp {{ 'exp-true' if app.has_experience else 'exp-false' }}">
-                                    {{ 'Experienced' if app.has_experience else 'Beginner Baseline' }}
-                                </span>
+                                <span class="sub-meta">Age: {{ app.age }}</span>
                             </td>
-                            <td>{{ app.state_of_origin }} / {{ app.lga }}<br><span class="sub-meta">{{ app.phone }}</span></td>
-                            <td>
-                                <span class="sub-meta">M: {{ app.mother_name }}</span><br>
-                                <span class="sub-meta">F: {{ app.father_name }}</span><br>
-                                <strong>G-Line: {{ app.guardian_phone if app.guardian_option == 'other' else '(Linked to parents)' }}</strong>
-                            </td>
-                            <td>
-                                <span class="status-badge {{ app.status|lower }}">{{ app.status }}</span>
-                            </td>
+                            <td>{{ app.state_of_origin }} / {{ app.lga }}</td>
+                            <td><span class="sub-meta">{{ app.phone or '—' }}</span></td>
+                            <td><span class="sub-meta">{{ 'Yes' if app.has_experience else 'No' }}</span></td>
+                            <td><span class="status-badge {{ app.status|lower }}">{{ app.status }}</span></td>
                             <td>
                                 <div class="action-btn-cluster">
                                     <button onclick="processApplication('{{ app._id }}', 'approve')" class="action-btn approve-btn">✓</button>
@@ -78,15 +225,129 @@
                             </td>
                         </tr>
                         {% else %}
-                        <tr>
-                            <td colspan="5" class="empty-table">No prospective applications found on database servers.</td>
-                        </tr>
+                        <tr><td colspan="6" class="empty-table">No applications yet.</td></tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+
     {% endif %}
 </div>
+
+<style>
+/* Admin-specific extras */
+.admin-tabs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--glass-border);
+    padding-bottom: 12px;
+}
+.tab-btn {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--glass-border);
+    color: var(--text-muted);
+    padding: 9px 16px;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.tab-btn.active,
+.tab-btn:hover {
+    background: var(--blue-core);
+    border-color: var(--blue-bright);
+    color: #fff;
+}
+.table-responsive { overflow-x: auto; }
+.empty-table {
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 0.82rem;
+    padding: 24px;
+}
+.admin-media-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 14px;
+}
+.admin-media-item { }
+input[type="file"] {
+    width: 100%;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--glass-border);
+    padding: 10px;
+    border-radius: 8px;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+.badge-exp { font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; }
+.exp-true  { background: rgba(34,197,94,0.1); color:#22c55e; }
+.exp-false { background: rgba(100,116,139,0.1); color:var(--text-dim); }
+</style>
+
+<script>
+// Admin Tab Switching
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p => p.style.display = 'none');
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.tab).style.display = 'block';
+    });
+});
+
+// Product Upload
+const productForm = document.getElementById('product-upload-form');
+if (productForm) {
+    productForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const fd = new FormData(productForm);
+        try {
+            const res    = await fetch('/admin/upload_product', { method: 'POST', body: fd });
+            const result = await res.json();
+            showToast((result.success ? '✅ ' : '❌ ') + result.message, result.success ? 'success' : 'error');
+            if (result.success) setTimeout(() => location.reload(), 1200);
+        } catch { showToast('❌ Upload failed.', 'error'); }
+    });
+}
+
+// Delete product
+async function deleteProduct(id) {
+    if (!confirm('Delete this product?')) return;
+    const res    = await fetch(`/admin/delete_product/${id}`, { method: 'POST' });
+    const result = await res.json();
+    showToast((result.success ? '✅ ' : '❌ ') + result.message, result.success ? 'success' : 'error');
+    if (result.success) { const r = document.getElementById(`prod-row-${id}`); if(r) r.remove(); }
+}
+
+// Delete gallery media
+async function deleteMedia(id) {
+    if (!confirm('Delete this post?')) return;
+    const res    = await fetch(`/admin/delete_media/${id}`, { method: 'POST' });
+    const result = await res.json();
+    showToast((result.success ? '✅ ' : '❌ ') + result.message, result.success ? 'success' : 'error');
+    if (result.success) { const el = document.getElementById(`gal-item-${id}`); if(el) el.remove(); }
+}
+
+// Confirm/cancel appointment
+async function confirmAppointment(id, action) {
+    const res    = await fetch(`/admin/update_appointment/${id}/${action}`, { method: 'POST' });
+    const result = await res.json();
+    showToast((result.success ? '✅ ' : '❌ ') + result.message, result.success ? 'success' : 'error');
+    if (result.success) {
+        const row = document.getElementById(`appt-row-${id}`);
+        if (row) {
+            const badge = row.querySelector('.status-badge');
+            badge.textContent = action === 'confirm' ? 'Confirmed' : 'Cancelled';
+            badge.className   = `status-badge ${action === 'confirm' ? 'approved' : 'rejected'}`;
+        }
+    }
+}
+</script>
 {% endblock %}
